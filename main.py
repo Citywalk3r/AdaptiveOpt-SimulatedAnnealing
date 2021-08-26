@@ -35,9 +35,7 @@ def parse_data():
         return
     else:
         data = np.genfromtxt(data_file, dtype=int, delimiter=',')
-        print(data)
-        print("----------------")
-        return np.tril(data, -1), np.triu(data)
+        return np.tril(data), np.triu(data)
 
 # TODO
 def move(currState):
@@ -81,10 +79,27 @@ def sim_annealing(x0,t0,m,n,a):
 
 def Qap():
     flow, dist = parse_data()
+
+    # DEBUG
+    # print(flow.shape)
+    # print(flow)
+    # print("----------------")
+    # print(dist)
+    p_cooling = 0.5
+    stages = 5
+    moves = 5
+    init_temp = 30
+    init_state = np.asarray([[1,2,3,4,5],
+                             [6,7,8,9,10],
+                             [11,12,13,14,15]
+                           ])
+    solution = sim_annealing(x0=init_state,
+                  t0=init_temp,
+                  m=stages,
+                  n=moves,
+                  a=p_cooling)
     
-    print(flow)
-    print("----------------")
-    print(dist)
+    print ("Solution is {}".format(solution))
        
 def Cmlbk():
     pass
