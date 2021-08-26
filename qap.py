@@ -14,32 +14,7 @@ def parse_data():
         data = np.genfromtxt(data_file, dtype=int, delimiter=',')
         return np.tril(data), np.triu(data)
 
-def sim_annealing(x0,t0,m,n,a, *argv):
-    """
-    Simulated annealing algorithm
-    """
 
-    # initialization
-    X = np.array(n)
-    T = np.array(m)
-    X[1] = x0
-    T[1] = t0
-    Xf = x0
-
-    for t in range(1,m):
-        for i in range(1,n):
-            Xtemp = self.move(X[i])
-            if self.eval_func(Xtemp)<= self.eval_func(X[i]):
-                X[i+1] = Xtemp
-            else:
-                if random.uniform(0, 1) <= math.exp(-((self.eval_func(Xtemp)-self.eval_func(X[i]))/T[t])):
-                    X[i+1] = Xtemp
-                else:
-                    X[i+1] = X[i]
-            if self.eval_func(X[i+1]) <= self.eval_func(Xf):
-                Xf = X[i+1]
-        T[t+1] = a*T[t]
-    return Xf
 
 
 class QAP:
@@ -65,9 +40,36 @@ class QAP:
         for x in it:
             for i in range (it.multi_index[0],currState.shape[0]):
                 for j in range (it.multi_index[1], currState.shape[1]):
-                    sums[it.multi_index[0]][it.multi_index[1]] += self.flow[currState[i][j]][x]*self.dist[x][currState[i][j]]
+                    sums[it.multi_index[0]][it.multi_index[1]] += self.flow[currState[i][j]][x]*self.dist[x][i+j]
         result = np.sum(sums)
         return result
+    
+    def sim_annealing(self, x0,t0,m,n,a, *argv):
+        """
+        Simulated annealing algorithm
+        """
+
+        # initialization
+        X = np.array(n)
+        T = np.array(m)
+        X[1] = x0
+        T[1] = t0
+        Xf = x0
+
+        for t in range(1,m):
+            for i in range(1,n):
+                Xtemp = self.move(X[i])
+                if self.eval_func(Xtemp)<= self.eval_func(X[i]):
+                    X[i+1] = Xtemp
+                else:
+                    if random.uniform(0, 1) <= math.exp(-((self.eval_func(Xtemp)-self.eval_func(X[i]))/T[t])):
+                        X[i+1] = Xtemp
+                    else:
+                        X[i+1] = X[i]
+                if self.eval_func(X[i+1]) <= self.eval_func(Xf):
+                    Xf = X[i+1]
+            T[t+1] = a*T[t]
+        return Xf
 
 
     def solve_qap(self):
