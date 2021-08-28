@@ -15,8 +15,6 @@ def parse_data():
         return np.tril(data), np.triu(data)
 
 
-
-
 class QAP:
 
     def __init__(self, is_debug=False):
@@ -40,7 +38,7 @@ class QAP:
         for x in it:
             for i in range (it.multi_index[0],currState.shape[0]):
                 for j in range (it.multi_index[1], currState.shape[1]):
-                    sums[it.multi_index[0]][it.multi_index[1]] += self.flow[currState[i][j]][x]*self.dist[x][i+j]
+                    sums[it.multi_index[0]][it.multi_index[1]] += self.flow[currState[i][j]][x]*self.dist[x][i*j+j]
         result = np.sum(sums)
         return result
     
