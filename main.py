@@ -3,9 +3,6 @@ import numpy as np
 import random
 import math
 
-
-
-
 def main_menu():
     print_str = """Welcome to Adaptive Optimization HW_1: Simulated Annealing\n
             The available problems are the following:\n
@@ -47,13 +44,17 @@ def eval_func(currState):
     Minimization is the objective.
     A lower returned value is better 
     """
-    pass
+    result = np.sum()
+
+    return result
 
 
-def sim_annealing(x0,t0,m,n,a):
+def sim_annealing(x0,t0,m,n,a, *argv):
     """
     Simulated annealing algorithm
     """
+
+    if ""
 
     # initialization
     X = np.array(n)
