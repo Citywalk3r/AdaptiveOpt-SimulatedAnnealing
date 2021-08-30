@@ -1,7 +1,4 @@
-from pathlib import Path
-import numpy as np
-import random
-import math
+import qap
 
 def main_menu():
     print_str = """Welcome to Adaptive Optimization HW_1: Simulated Annealing\n
@@ -15,7 +12,8 @@ def main_menu():
         while selection!="1" and selection!="2":
             selection = input("Invalid choice. Please type 1 or 2 and press ENTER...\n")
         if selection=="1":
-            pass
+            QAP = qap.QAP(is_debug=False)
+            QAP.solve_qap()
         else:
             pass
     
