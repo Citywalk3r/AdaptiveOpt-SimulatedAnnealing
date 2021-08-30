@@ -23,7 +23,7 @@ def sim_annealing(x0,t0,m,n,a, move_f, eval_f):
         print("Running Simulated annealing...")
 
         # region initialization
-        
+
         x_curr = x0
         t_curr = t0
         x_final = x0

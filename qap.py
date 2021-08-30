@@ -20,6 +20,9 @@ class QAP:
         self.is_debug = is_debug
 
     def move(self, currState):
+        """Implements the move operator.
+           Picks 2 random elements from the array and swaps them.
+        """
 
         nextState = np.array(currState.flatten())
 
@@ -36,11 +39,11 @@ class QAP:
         Evaluates the current state by
         calculating distance*flow linear combinations
         for all elements.
+
+        --performance bottleneck--
         """
-        # element-wise linear combination of dist*flow pairs
         sums = np.zeros((3,5))
 
-        # 3x5 array iterator
         it = np.nditer(currState, flags=['multi_index'])
 
         element_position = 0

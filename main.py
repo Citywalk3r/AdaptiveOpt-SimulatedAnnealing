@@ -1,4 +1,5 @@
 import qap
+import cmlbk
 
 def main_menu():
     print_str = """Welcome to Adaptive Optimization HW_1: Simulated Annealing\n
@@ -15,7 +16,8 @@ def main_menu():
             QAP = qap.QAP(is_debug=False)
             QAP.solve_qap()
         else:
-            pass
+            CMLBK = cmlbk.CMLBK(is_debug=False)
+            CMLBK.solve_cmlbk()
     
     except SyntaxError:
         print("Please upgrade your Python installation to a Python 3 version. Aborting..\n")
