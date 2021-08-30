@@ -8,11 +8,14 @@ class CMLBK:
         self.is_debug = is_debug
 
     def move(self, currState):
+        """Samples 2 values from a normal distribution with mean=0 and std=0.01
+           Adds the first value to x and the second to y, if the new numbers
+           remain within the bounds (i.e., x E (-3,3) and y E (-2,2)).
+        """
         modifiers = np.random.normal(loc=0.0, scale=0.01, size=2)
         nextState = np.array([0, 0], dtype=np.float64)
         newX = currState[0] + modifiers[0]
         newY = currState[1] + modifiers[1]
-        # print(modifiers)
 
 
         if newX > -3 and newX < 3:
@@ -37,10 +40,6 @@ class CMLBK:
         """
         Solves the 6 hump camelback function.
         """
-
-        if self.is_debug:
-           pass
-        
         p_cooling = 0.99
         stages = 1000
         moves = 20
