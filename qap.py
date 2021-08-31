@@ -76,7 +76,7 @@ class QAP:
 
         return np.sum(sums)
     
-    def solve_qap(self, init_state):
+    def solve_qap(self, init_state=None, stop_crit_dict=None):
         """
         Solves the qap problem.
         """
@@ -88,7 +88,14 @@ class QAP:
         stages = 1000
         moves = 5
         init_temp = 1000
-        init_state = np.asarray(init_state)
+
+        if init_state:
+            init_state = np.asarray(init_state)
+        else:
+            init_state = np.asarray([[1,2,3,4,5],
+                        [6,7,8,9,10],
+                        [11,12,13,14,15]
+                    ])
         
         solution = sa(x0=init_state,
                     t0=init_temp,
@@ -96,7 +103,8 @@ class QAP:
                     n=moves,
                     a=p_cooling,
                     move_f=self.move,
-                    eval_f=self.eval_func)
+                    eval_f=self.eval_func,
+                    stopping_criterion_dict=stop_crit_dict)
 
         score = self.eval_func(solution)
         print("Solution: \n{}\n Score: {}".format(solution, score))

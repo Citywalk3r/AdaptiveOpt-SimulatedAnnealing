@@ -59,6 +59,31 @@ def set_init_CMLBK_states():
 
     return initial_states
 
+def generte_stopping_criteria(val_crit_1, val_crit_2):
+    """
+        Generates the list of stopping criteria.
+        Criteria are represented as dictionarys with 2 key-value pairs:
+
+        1) Name of the criterion
+        2) Value of the criterion
+       
+      Parameters:
+            val_crit_1 : The value for no_improvement_over_n criterion.
+            val_crit_2 : The value for no_accepted_moves_over_m criterion.
+
+        Returns:
+            stopping_criteria : List of 2 dictionaries, 1 for each criterion
+
+    """
+
+    stopping_criteria = []
+    stopping_criterion_vanilla_algorithm = None
+    stopping_criterion_no_imp = {"name": "no_improvement_over_n", "value": val_crit_1}
+    stopping_criterion_no_acc = {"name": "no_accepted_moves_over_m", "value": val_crit_2}
+    stopping_criteria.extend([stopping_criterion_vanilla_algorithm, stopping_criterion_no_imp, stopping_criterion_no_acc])
+    return stopping_criteria
+
+
 def main_menu():
     print_str = """Welcome to Adaptive Optimization HW_1: Simulated Annealing\n
             The available problems are the following:\n
@@ -84,17 +109,21 @@ def main_menu():
             elapsed_time = process_time() - t
             print("Elapsed time: {} seconds.".format(elapsed_time))
         else:
+
+            stopping_criteria = generte_stopping_criteria()
             initial_QAP_states = set_init_QAP_states()
             initial_CMLBK_states = set_init_CMLBK_states()
             QAP = qap.QAP(is_debug=False)
             CMLBK = cmlbk.CMLBK(is_debug=False)
 
-            # for item in initial_QAP_states:
-            #     QAP.solve_qap(item)
-            
-            for item in initial_CMLBK_states:
-                CMLBK.solve_cmlbk(item)
-
+            for stop_criterion in stopping_criteria:
+                for initial_state in initial_QAP_states:
+                    t = process_time()
+                    init_state, solution, score, init_temp, stages, moves, p_cooling = QAP.solve_qap(
+                                                                                        init_state=initial_state,
+                                                                                        stop_crit_dict=stop_criterion)
+                    elapsed_time = process_time() - t
+                
             
 
     except SyntaxError:
