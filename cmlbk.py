@@ -36,7 +36,7 @@ class CMLBK:
         z = (4 - 2.1 * x**2 + (x**4)/3) * x**2 + x * y + (-4 + 4 * y**2) * y**2
         return z
     
-    def solve_cmlbk(self):
+    def solve_cmlbk(self, init_state):
         """
         Solves the 6 hump camelback function.
         """
@@ -44,7 +44,7 @@ class CMLBK:
         stages = 1000
         moves = 20
         init_temp = 1000
-        init_state = np.array([0, 0], dtype=np.float64)
+        init_state = np.array(init_state, dtype=np.float64)
         
         solution = sa(x0=init_state,
                     t0=init_temp,
@@ -54,7 +54,10 @@ class CMLBK:
                     move_f=self.move,
                     eval_f=self.eval_func)
 
-        print("Solution: \n{}\n Score: {}".format(solution, self.eval_func(solution)))
+        score = self.eval_func(solution)
+        print("Solution: \n{}\n Score: {}".format(solution, score))
+
+        return init_state, solution, score, init_temp, stages, moves, p_cooling
 
 
 if __name__ == "__main__":

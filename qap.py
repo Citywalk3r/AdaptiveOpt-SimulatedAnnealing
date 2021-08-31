@@ -18,6 +18,7 @@ class QAP:
 
     def __init__(self, is_debug):
         self.is_debug = is_debug
+        self.flow, self.dist = parse_data()
 
     def move(self, currState):
         """Implements the move operator.
@@ -75,12 +76,10 @@ class QAP:
 
         return np.sum(sums)
     
-    def solve_qap(self):
+    def solve_qap(self, init_state):
         """
         Solves the qap problem.
         """
-        self.flow, self.dist = parse_data()
-
         if self.is_debug:
             print("Flow table: \n{}".format(self.flow))
             print("Distance table: \n{}".format(self.dist))
@@ -89,10 +88,7 @@ class QAP:
         stages = 1000
         moves = 5
         init_temp = 1000
-        init_state = np.asarray([[1,2,3,4,5],
-                                [6,7,8,9,10],
-                                [11,12,13,14,15]
-                            ])
+        init_state = np.asarray(init_state)
         
         solution = sa(x0=init_state,
                     t0=init_temp,
@@ -102,37 +98,10 @@ class QAP:
                     move_f=self.move,
                     eval_f=self.eval_func)
 
-        print("Solution: \n{}\n Score: {}".format(solution, self.eval_func(solution)))
+        score = self.eval_func(solution)
+        print("Solution: \n{}\n Score: {}".format(solution, score))
 
-        return
-
-        #region Examples
-
-        # eval 702
-        ex_1 = np.asarray([[10,5,8,7,12],
-                               [9,6,13,2,4],
-                               [15,3,14,1,11]
-                            ])
-
-        # eval 713
-        ex_2 = np.asarray([[7,10,14,2,1],
-                               [12,8,6,4,13],
-                               [5,15,11,3,9]
-                            ])
-
-        # eval 647
-        ex_3 = np.asarray([[10,12,8,9,11],
-                               [6,5,3,13,1],
-                               [15,4,14,2,7]
-                            ])
-
-        # eval 575 - optimal
-        ex_4 = np.asarray([[9,8,13,2,1],
-                                [11,7,14,3,4],
-                                [12,5,6,15,10]
-                            ])
-
-        #endregion
+        return init_state, solution, score, init_temp, stages, moves, p_cooling
 
 
 if __name__ == "__main__":
