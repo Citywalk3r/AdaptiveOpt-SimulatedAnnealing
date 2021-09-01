@@ -87,7 +87,7 @@ class QAP:
         p_cooling = 0.99
         stages = 1000
         moves = 5
-        init_temp = 1000
+        init_temp = 30
 
         if init_state:
             init_state = np.asarray(init_state)
@@ -111,7 +111,23 @@ class QAP:
 
         return init_state, solution, score, init_temp, stages, moves, p_cooling
 
+    def calculate_init_temp(self, num_moves, init_state, t_test):
+        import itertools
+        import math
+        currState = init_state
+        previous_e = None
+        sum_delta_e = 0
+        for _ in itertools.repeat(None, num_moves):
+            e = self.eval_func(currState)
+            if previous_e:
+                delta_e = abs(previous_e-e)
+                sum_delta_e += delta_e
+            previous_e = e
+            currState = self.move(currState)
 
+        avg_delta_e = sum_delta_e/num_moves
+        return ("Chosen initial temperature {} gives: {} probability to accept a worsening move.".format(t_test, math.exp(-(avg_delta_e/t_test))))
+            
 if __name__ == "__main__":
     QAP = QAP(is_debug=False)
     QAP.solve_qap()

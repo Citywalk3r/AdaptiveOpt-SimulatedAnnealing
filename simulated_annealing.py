@@ -2,7 +2,7 @@ import itertools
 import random
 import math
 
-def sim_annealing(x0,t0,m,n,a, move_f, eval_f,stopping_criterion_dict):
+def sim_annealing(x0,t0,m,n,a, move_f, eval_f, stopping_criterion_dict):
 
         """Simulated annealing algorithm
 
@@ -21,7 +21,7 @@ def sim_annealing(x0,t0,m,n,a, move_f, eval_f,stopping_criterion_dict):
         """
 
         print("Running Simulated annealing...")
-        
+
         if stopping_criterion_dict:
             print(stopping_criterion_dict["name"])
             print(stopping_criterion_dict["value"])

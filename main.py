@@ -89,12 +89,13 @@ def main_menu():
             The available problems are the following:\n
             1) Combinatorial Optimization -- QAP\n
             2) Continuous Optimization: 6 hump camelback function\n
-            3) Both problems (45 runs with different starting points, schedules and stopping criteria).
+            3) Both problems (45 runs with different starting points, schedules and stopping criteria).\n
+            4) Initial temperature selection.
             """
     print(print_str)
     try:
-        selection = input("Please type 1 or 2 or 3 and press ENTER...\n")
-        while selection!="1" and selection!="2" and selection!="3":
+        selection = input("Please type 1 or 2 or 3 or 4 and press ENTER...\n")
+        while selection!="1" and selection!="2" and selection!="3" and selection!="4":
             selection = input("Invalid choice. Please type 1 or 2 or 3 and press ENTER...\n")
         if selection=="1":
             QAP = qap.QAP(is_debug=False)
@@ -108,6 +109,16 @@ def main_menu():
             CMLBK.solve_cmlbk()
             elapsed_time = process_time() - t
             print("Elapsed time: {} seconds.".format(elapsed_time))
+        
+        elif selection=="4":
+            QAP = qap.QAP(is_debug=False)
+            print_str = QAP.calculate_init_temp(num_moves=200, 
+                                    init_state= np.asarray([[10,5,8,7,12],
+                                                            [9,6,13,2,4],
+                                                            [15,3,14,1,11]
+                                                           ]),
+                                    t_test=30)
+            print(print_str)
         else:
 
             stopping_criteria = generte_stopping_criteria()
