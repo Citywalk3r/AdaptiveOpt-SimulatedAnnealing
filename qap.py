@@ -89,8 +89,8 @@ class QAP:
             print("Distance table: \n{}".format(self.dist))
         
         p_cooling = 0.99
-        stages = 5000
-        moves = 1
+        stages = 1000
+        moves = 5
         init_temp = 30
 
         if init_state is not None:

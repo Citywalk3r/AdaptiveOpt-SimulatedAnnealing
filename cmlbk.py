@@ -46,7 +46,7 @@ class CMLBK:
         eval_list = []
 
         p_cooling = 0.99
-        stages = 5000
+        stages = 3000
         moves = 1
         init_temp = 0.01
 
