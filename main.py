@@ -9,39 +9,33 @@ def set_init_QAP_states():
      
     # eval 702
     ex_1 = np.asarray([[10,5,8,7,12],
-                        [9,6,13,2,4],
-                        [15,3,14,1,11]
-                    ])
+                       [9,6,13,2,4],
+                       [15,3,14,1,11]])
 
     # eval 713
     ex_2 = np.asarray([[7,10,14,2,1],
-                        [12,8,6,4,13],
-                        [5,15,11,3,9]
-                    ])
+                       [12,8,6,4,13],
+                       [5,15,11,3,9]])
 
     # eval 647
     ex_3 = np.asarray([[10,12,8,9,11],
-                        [6,5,3,13,1],
-                        [15,4,14,2,7]
-                    ])
+                       [6,5,3,13,1],
+                       [15,4,14,2,7]])
 
     # eval 663
     ex_4 = np.asarray([[9,8,13,2,12],
-                        [11,7,14,3,4],
-                        [1,5,6,15,10]
-                    ])
+                       [11,7,14,3,4],
+                       [1,5,6,15,10]])
 
     # eval 746
     ex_5 = np.asarray([[1,2,3,4,5],
-                        [6,7,8,9,10],
-                        [11,12,13,14,15]
-                    ])
+                       [6,7,8,9,10],
+                       [11,12,13,14,15]])
     
     # eval 575 - optimal
     ex_6 = np.asarray([[9,8,13,2,1],
                         [11,7,14,3,4],
-                        [12,5,6,15,10]
-                    ])
+                        [12,5,6,15,10]])
     
     initial_states.extend([ex_1,ex_2,ex_3,ex_4,ex_5])
     return initial_states
@@ -59,7 +53,7 @@ def set_init_CMLBK_states():
 
     return initial_states
 
-def generte_stopping_criteria(val_crit_1, val_crit_2):
+def generte_stopping_criteria(val_crit_1=200, val_crit_2=30):
     """
         Generates the list of stopping criteria.
         Criteria are represented as dictionarys with 2 key-value pairs:
@@ -85,7 +79,7 @@ def generte_stopping_criteria(val_crit_1, val_crit_2):
 
 
 def main_menu():
-    print_str = """Welcome to Adaptive Optimization HW_1: Simulated Annealing\n
+    print_str = """Adaptive Optimization HW_1: Simulated Annealing\n
             The available problems are the following:\n
             1) Combinatorial Optimization -- QAP\n
             2) Continuous Optimization: 6 hump camelback function\n
@@ -96,7 +90,7 @@ def main_menu():
     try:
         selection = input("Please type 1 or 2 or 3 or 4 and press ENTER...\n")
         while selection!="1" and selection!="2" and selection!="3" and selection!="4":
-            selection = input("Invalid choice. Please type 1 or 2 or 3 and press ENTER...\n")
+            selection = input("Invalid choice. Please type 1 or 2 or 3 or 4 and press ENTER...\n")
         if selection=="1":
             QAP = qap.QAP(is_debug=False)
             t = process_time()
@@ -112,12 +106,18 @@ def main_menu():
         
         elif selection=="4":
             QAP = qap.QAP(is_debug=False)
-            print_str = QAP.calculate_init_temp(num_moves=200, 
+            print_str = QAP.calculate_init_temp(num_moves=10000, 
                                     init_state= np.asarray([[10,5,8,7,12],
                                                             [9,6,13,2,4],
                                                             [15,3,14,1,11]
                                                            ]),
                                     t_test=30)
+            print(print_str)
+
+            CMLBK = cmlbk.CMLBK(is_debug=False)
+            print_str = CMLBK.calculate_init_temp(num_moves=10000, 
+                                    init_state= np.asarray([-1.1232, 1.0023233]),
+                                    t_test=0.05)
             print(print_str)
         else:
 
@@ -127,14 +127,22 @@ def main_menu():
             QAP = qap.QAP(is_debug=False)
             CMLBK = cmlbk.CMLBK(is_debug=False)
 
-            for stop_criterion in stopping_criteria:
-                for initial_state in initial_QAP_states:
-                    t = process_time()
-                    init_state, solution, score, init_temp, stages, moves, p_cooling = QAP.solve_qap(
-                                                                                        init_state=initial_state,
-                                                                                        stop_crit_dict=stop_criterion)
-                    elapsed_time = process_time() - t
-                
+            # for stop_criterion in stopping_criteria:
+            for initial_state in initial_QAP_states:
+                t = process_time()
+                init_state, solution, score, init_temp, stages, moves, p_cooling = QAP.solve_qap(
+                                                                                    init_state=initial_state,
+                                                                                    stop_crit_dict={"name": "no_improvement_over_n", "value": 100})
+                elapsed_time = process_time() - t
+            
+            # for stop_criterion in stopping_criteria:
+            for initial_state in initial_CMLBK_states:
+                t = process_time()
+                init_state, solution, score, init_temp, stages, moves, p_cooling = CMLBK.solve_cmlbk(
+                                                                                    init_state=initial_state,
+                                                                                    stop_crit_dict={"name": "no_improvement_over_n", "value": 100})
+                elapsed_time = process_time() - t
+            
             
 
     except SyntaxError:

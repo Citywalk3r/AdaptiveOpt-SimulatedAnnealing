@@ -80,16 +80,20 @@ class QAP:
         """
         Solves the qap problem.
         """
+
+        # list of historical state evaluations
+        eval_list = []
+
         if self.is_debug:
             print("Flow table: \n{}".format(self.flow))
             print("Distance table: \n{}".format(self.dist))
         
         p_cooling = 0.99
-        stages = 1000
-        moves = 5
+        stages = 5000
+        moves = 1
         init_temp = 30
 
-        if init_state:
+        if init_state is not None:
             init_state = np.asarray(init_state)
         else:
             init_state = np.asarray([[1,2,3,4,5],
@@ -97,7 +101,7 @@ class QAP:
                         [11,12,13,14,15]
                     ])
         
-        solution = sa(x0=init_state,
+        solution, statelist = sa(x0=init_state,
                     t0=init_temp,
                     m=stages,
                     n=moves,
@@ -105,9 +109,20 @@ class QAP:
                     move_f=self.move,
                     eval_f=self.eval_func,
                     stopping_criterion_dict=stop_crit_dict)
+        
+        for state in statelist:
+            eval_list.append(self.eval_func(state))
 
         score = self.eval_func(solution)
         print("Solution: \n{}\n Score: {}".format(solution, score))
+
+        import matplotlib.pyplot as plt
+
+        plt.plot(range(len(eval_list)), eval_list)
+        plt.xlabel("iterations")
+        plt.ylabel("score")
+        plt.show()
+        
 
         return init_state, solution, score, init_temp, stages, moves, p_cooling
 
@@ -120,13 +135,13 @@ class QAP:
         for _ in itertools.repeat(None, num_moves):
             e = self.eval_func(currState)
             if previous_e:
-                delta_e = abs(previous_e-e)
+                delta_e = abs(e - previous_e)
                 sum_delta_e += delta_e
             previous_e = e
             currState = self.move(currState)
 
-        avg_delta_e = sum_delta_e/num_moves
-        return ("Chosen initial temperature {} gives: {} probability to accept a worsening move.".format(t_test, math.exp(-(avg_delta_e/t_test))))
+        avg_delta_e = sum_delta_e/(num_moves-1)
+        return ("QAP: Chosen initial temperature {} gives: {} probability to accept a non-improving move.".format(t_test, math.exp(-(avg_delta_e/t_test))))
             
 if __name__ == "__main__":
     QAP = QAP(is_debug=False)
